@@ -87,23 +87,26 @@
     (dolist (element file-list new-list)
       (setq new-list (cons (concat prefix element) new-list)))))
 
-(defun get-candidates-- (rospack-find-str)
-  (message rospack-find-str)
-  (setq rospack-find-str (replace-in-string-- "/[^/ \"]+\\'" "/" rospack-find-str))
-  (message rospack-find-str)
+(defun get-rospack-absolute-path (rospack-find-str)
   (let* ((pkg-path (replace-in-string-- "find" "rospack find" rospack-find-str))
          (absolute-path (shell-command-to-string (concat "/bin/echo -n " pkg-path)))
          (no-package (string-match "\\[rospack\\] Error: package .* not found" absolute-path)))
     (unless no-package
-      (prepare-candidates-- rospack-find-str (directory-files absolute-path)))))
+      absolute-path)))
+
+(defun get-candidates-- (rospack-find-str)
+  (let (absolute-path)
+    (setq absolute-path (get-rospack-absolute-path rospack-find-str))
+    (if (file-directory-p absolute-path)
+          (setq rospack-find-str (replace-in-string-- "/*\\'" "/" rospack-find-str))
+      (setq rospack-find-str (replace-in-string-- "/[^/ \"]+\\'" "/" rospack-find-str)))
+    (prepare-candidates-- rospack-find-str (cdr (cdr (directory-files (get-rospack-absolute-path rospack-find-str)))))))
 
 (defun company-rospack-find-backend (command &optional arg &rest ignored)
   (interactive (list 'interactive))
-
   (case command
     (interactive (company-begin-backend 'company-rospack-find-backend))
     (prefix (and (eq major-mode 'nxml-mode)
-                 (company-grab-symbol)
                  (when (looking-back "\\$(find [^\"\/ )]+)/[^\" ]*")
                    (match-string 0))))
     (candidates
