@@ -78,3 +78,46 @@
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "=" 'editorconfig-format-buffer)
     (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'my-launch-file-config))
+
+;; Path autocompletion for $(find pkg-name)/...
+(require 'company)
+
+(defun print-elements-of-list (list)
+  "Print each element of LIST on a line of its own."
+  (while list
+    (message (car list))
+    (setq list (cdr list))))
+
+(defun prepare-candidates(prefix file-list)
+  (let (new-list)
+    (dolist (element file-list new-list)
+      (setq new-list (cons (concat prefix element) new-list)))))
+
+(defun replace-in-string (pattern replacement original-text)
+  (replace-regexp-in-string (regexp-quote pattern) replacement original-text nil 'literal))
+
+(defun get-candidates (rospack-find-str)
+  (message rospack-find-str)
+  (setq rospack-find-str (replace-in-string "/[^/ ]+\\'" "/" rospack-find-str))
+  (message rospack-find-str)
+  (let* ((pkg-path (replace-in-string "find" "rospack find" rospack-find-str))
+         (absolute-path (shell-command-to-string (concat "/bin/echo -n " pkg-path)))
+         (no-package (string-match "\\[rospack\\] Error: package .* not found" absolute-path)))
+    (unless no-package
+      (prepare-candidates rospack-find-str (directory-files absolute-path)))))
+
+(defun company-sample-backend (command &optional arg &rest ignored)
+  (interactive (list 'interactive))
+
+  (case command
+    (interactive (company-begin-backend 'company-sample-backend))
+    (prefix (and (eq major-mode 'nxml-mode)
+                 (company-grab-symbol)
+                 (when (looking-back "\\$(find [^\"\/ )]+)/[^\" ]*")
+                   (match-string 0))))
+    (candidates
+     (remove-if-not
+      (lambda (c) (string-prefix-p arg c))
+      (get-candidates arg)))))
+
+(add-to-list 'company-backends 'company-sample-backend)
