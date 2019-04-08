@@ -6,19 +6,19 @@
 (setq re-pkg "pkg=\"\\([^\"]*\\)\"")
 (setq re-py "type=\"\\([^\"]*\\.py\\)\"")
 
-(defun get-match-from-current-line (re)
+(defun get-match-from-current-line-- (re)
   (let* ((current-line (thing-at-point 'line t))
          (found-match (string-match re current-line)))
     (if found-match
         (match-string 1 current-line))))
 
-(defun remove-new-line (str)
-  (replace-in-string "\n" "" str))
+(defun remove-new-line-- (str)
+  (replace-in-string-- "\n" "" str))
 
 (defun get-pkg-path (pkg-name)
   (let* ((pkg-path (shell-command-to-string (concat "rospack find " pkg-name)))
          (no-package (string-match-p "\\[rospack\\] Error: package .* not found" pkg-path)))
-    (when (not no-package) (remove-new-line pkg-path))))
+    (when (not no-package) (remove-new-line-- pkg-path))))
 
 (defun get-pkg-file-path (pkg-name file-name)
   (let* ((pkg-path (get-pkg-path pkg-name))
@@ -26,8 +26,8 @@
     (car file-path-list)))
 
 (defun jump-to-py ()
-  (let ((pkg-name (get-match-from-current-line re-pkg))
-        (py-file-name (get-match-from-current-line re-py)))
+  (let ((pkg-name (get-match-from-current-line-- re-pkg))
+        (py-file-name (get-match-from-current-line-- re-py)))
     (if (and pkg-name py-file-name)
         (find-file (get-pkg-file-path pkg-name py-file-name)))))
 
@@ -36,7 +36,7 @@
          (found-match (string-match re-ros-path current-line)))
     (when found-match
       (let* ((raw-ros-path (match-string 0 current-line))
-             (ros-path (replace-in-string "find" "rospack find" raw-ros-path))
+             (ros-path (replace-in-string-- "find" "rospack find" raw-ros-path))
              (absolute-path (shell-command-to-string (concat "/bin/echo -n " ros-path)))
              (no-package (string-match "\\[rospack\\] Error: package .* not found" absolute-path)))
         (if no-package
@@ -45,7 +45,7 @@
 
 (defun jump-to-pkg (search)
   (let* (
-         (pkg-name (get-match-from-current-line re-pkg))
+         (pkg-name (get-match-from-current-line-- re-pkg))
          (absolute-path
           (replace-regexp-in-string "\n$" "" (shell-command-to-string (format "rospack find %s" pkg-name)))))
     (if search
@@ -64,7 +64,7 @@
   (interactive)
   (jump-to-pkg t))
 
-(defun replace-in-string (pattern replacement original-text)
+(defun replace-in-string-- (pattern replacement original-text)
   (replace-regexp-in-string pattern replacement original-text nil 'literal))
 
 (when (fboundp 'nxml-mode)
@@ -82,32 +82,26 @@
 ;; Path autocompletion for $(find pkg-name)/...
 (require 'company)
 
-(defun print-elements-of-list (list)
-  "Print each element of LIST on a line of its own."
-  (while list
-    (message (car list))
-    (setq list (cdr list))))
-
-(defun prepare-candidates(prefix file-list)
+(defun prepare-candidates-- (prefix file-list)
   (let (new-list)
     (dolist (element file-list new-list)
       (setq new-list (cons (concat prefix element) new-list)))))
 
-(defun get-candidates (rospack-find-str)
+(defun get-candidates-- (rospack-find-str)
   (message rospack-find-str)
-  (setq rospack-find-str (replace-in-string "/[^/ \"]+\\'" "/" rospack-find-str))
+  (setq rospack-find-str (replace-in-string-- "/[^/ \"]+\\'" "/" rospack-find-str))
   (message rospack-find-str)
-  (let* ((pkg-path (replace-in-string "find" "rospack find" rospack-find-str))
+  (let* ((pkg-path (replace-in-string-- "find" "rospack find" rospack-find-str))
          (absolute-path (shell-command-to-string (concat "/bin/echo -n " pkg-path)))
          (no-package (string-match "\\[rospack\\] Error: package .* not found" absolute-path)))
     (unless no-package
-      (prepare-candidates rospack-find-str (directory-files absolute-path)))))
+      (prepare-candidates-- rospack-find-str (directory-files absolute-path)))))
 
-(defun company-sample-backend (command &optional arg &rest ignored)
+(defun company-rospack-find-backend (command &optional arg &rest ignored)
   (interactive (list 'interactive))
 
   (case command
-    (interactive (company-begin-backend 'company-sample-backend))
+    (interactive (company-begin-backend 'company-rospack-find-backend))
     (prefix (and (eq major-mode 'nxml-mode)
                  (company-grab-symbol)
                  (when (looking-back "\\$(find [^\"\/ )]+)/[^\" ]*")
@@ -115,6 +109,6 @@
     (candidates
      (remove-if-not
       (lambda (c) (string-prefix-p arg c))
-      (get-candidates arg)))))
+      (get-candidates-- arg)))))
 
-(add-to-list 'company-backends 'company-sample-backend)
+(add-to-list 'company-backends 'company-rospack-find-backend)
