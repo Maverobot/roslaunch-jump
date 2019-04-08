@@ -65,7 +65,7 @@
   (jump-to-pkg t))
 
 (defun replace-in-string (pattern replacement original-text)
-  (replace-regexp-in-string (regexp-quote pattern) replacement original-text nil 'literal))
+  (replace-regexp-in-string pattern replacement original-text nil 'literal))
 
 (when (fboundp 'nxml-mode)
   (defun my-launch-file-config ()
@@ -93,12 +93,9 @@
     (dolist (element file-list new-list)
       (setq new-list (cons (concat prefix element) new-list)))))
 
-(defun replace-in-string (pattern replacement original-text)
-  (replace-regexp-in-string (regexp-quote pattern) replacement original-text nil 'literal))
-
 (defun get-candidates (rospack-find-str)
   (message rospack-find-str)
-  (setq rospack-find-str (replace-in-string "/[^/ ]+\\'" "/" rospack-find-str))
+  (setq rospack-find-str (replace-in-string "/[^/ \"]+\\'" "/" rospack-find-str))
   (message rospack-find-str)
   (let* ((pkg-path (replace-in-string "find" "rospack find" rospack-find-str))
          (absolute-path (shell-command-to-string (concat "/bin/echo -n " pkg-path)))
