@@ -72,11 +72,11 @@
     "For use in `nxml-mode-hook'."
     (spacemacs/declare-prefix-for-mode 'nxml-mode "mg" "goto")
     (spacemacs/declare-prefix-for-mode 'nxml-mode "mgp" "ros-package")
+    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "=" 'editorconfig-format-buffer)
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gg" 'jump-to-file)
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gpp" 'jump-to-pkg-browse-dir)
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gpf" 'jump-to-pkg-find-files))
-    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "=" 'editorconfig-format-buffer)
-    (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
+  (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'company-mode)
   (add-hook 'nxml-mode-hook 'my-launch-file-config))
 
@@ -99,7 +99,7 @@
   (let (absolute-path)
     (setq absolute-path (get-rospack-absolute-path rospack-find-str))
     (if (file-directory-p absolute-path)
-          (setq rospack-find-str (replace-in-string-- "/*\\'" "/" rospack-find-str))
+        (setq rospack-find-str (replace-in-string-- "/*\\'" "/" rospack-find-str))
       (setq rospack-find-str (replace-in-string-- "/[^/ \"]+\\'" "/" rospack-find-str)))
     (prepare-candidates-- rospack-find-str (cdr (cdr (directory-files (get-rospack-absolute-path rospack-find-str)))))))
 
