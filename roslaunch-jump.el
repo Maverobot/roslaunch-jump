@@ -71,11 +71,10 @@
   (defun my-launch-file-config ()
     "For use in `nxml-mode-hook'."
     (spacemacs/declare-prefix-for-mode 'nxml-mode "mg" "goto")
-    (spacemacs/declare-prefix-for-mode 'nxml-mode "mgp" "ros-package")
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "=" 'editorconfig-format-buffer)
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gg" 'roslaunch-jump-jump-to-file)
-    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gpp" 'roslaunch-jump-to-pkg-browse-dir)
-    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gpf" 'roslaunch-jump-to-pkg-find-files))
+    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gd" 'roslaunch-jump-to-pkg-browse-dir)
+    (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "gf" 'roslaunch-jump-to-pkg-find-files))
   (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'company-mode)
   (add-hook 'nxml-mode-hook 'my-launch-file-config))
