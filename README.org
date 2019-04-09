@@ -1,2 +1,15 @@
 #+TITLE: roslaunch-jump
 An emacs package for making jumping around in ROS launch files easy peasy.
+* Installation
+  Use `load-file` function to load it in your config file. For example,
+  #+BEGIN_SRC emacs-lisp
+  (load-file "path/to/roslaunch-jump/roslaunch-jump.el")
+  #+END_SRC
+
+* Keybindings
+  | Key Binding | Description                                                                                             |
+  |-------------+---------------------------------------------------------------------------------------------------------|
+  | ~, g g~       | jump to the path of the current line, e.g. yaml, xacro, launch etc.                                     |
+  | ~, g d~       | jump to the pkg path of the current line and start browsing the directory                               |
+  | ~, g f~       | jump to the pkg path of the current line and start fuzzy find all files recursively under the directory |
+  | ~, =~         | format buffer                                                                                           |
