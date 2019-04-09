@@ -9,7 +9,7 @@ An emacs package for making jumping around in ROS launch files easy peasy.
 * Keybindings
   | Key Binding | Description                                                                                             |
   |-------------+---------------------------------------------------------------------------------------------------------|
-  | ~, g g~       | jump to the path of the current line, e.g. yaml, xacro, launch etc.                                     |
-  | ~, g d~       | jump to the pkg path of the current line and start browsing the directory                               |
-  | ~, g f~       | jump to the pkg path of the current line and start fuzzy find all files recursively under the directory |
-  | ~, =~         | format buffer                                                                                           |
+  | ~SPC m g g~  | jump to the path of the current line, e.g. yaml, xacro, launch etc.                                     |
+  | ~SPC m g d~  | jump to the pkg path of the current line and start browsing the directory                               |
+  | ~SPC m g f~  | jump to the pkg path of the current line and start fuzzy find all files recursively under the directory |
+  | ~SPC m =~    | format buffer                                                                                           |
