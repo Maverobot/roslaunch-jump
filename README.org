@@ -1,7 +1,7 @@
 #+TITLE: roslaunch-jump
 An emacs package for making jumping around in ROS launch files easy peasy.
 * Installation
-  Use `load-file` function to load it in your config file. For example,
+  Use ~load-file~ function to load it in your config file. For example,
   #+BEGIN_SRC emacs-lisp
   (load-file "path/to/roslaunch-jump/roslaunch-jump.el")
   #+END_SRC
