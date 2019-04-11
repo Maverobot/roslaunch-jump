@@ -1,6 +1,6 @@
 #+TITLE: roslaunch-jump
 An emacs package for making jumping around in ROS launch files easy peasy.
-[[file:gifs/demo.gif]
+[[file:gifs/demo.gif]]
 * Installation
   Use ~load-file~ function to load it in your config file. For example,
   #+BEGIN_SRC emacs-lisp
