@@ -2,9 +2,9 @@
 
 (require 'helm)
 
-(setq re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|rviz\\|py\\)")
-(setq re-pkg "pkg=\"\\([^\"]*\\)\"")
-(setq re-py "type=\"\\([^\"]*\\.py\\)\"")
+(setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|rviz\\|py\\)")
+(setq roslaunch--jump-re-pkg "pkg=\"\\([^\"]*\\)\"")
+(setq roslaunch-jump--re-py "type=\"\\([^\"]*\\.py\\)\"")
 
 (defun roslaunch-jump--get-match-from-current-line (re)
   (let* ((current-line (thing-at-point 'line t))
@@ -26,14 +26,14 @@
     (car file-path-list)))
 
 (defun roslaunch-jump-to-py ()
-  (let ((pkg-name (roslaunch-jump--get-match-from-current-line re-pkg))
-        (py-file-name (roslaunch-jump--get-match-from-current-line re-py)))
+  (let ((pkg-name (roslaunch-jump--get-match-from-current-line roslaunch--jump-re-pkg))
+        (py-file-name (roslaunch-jump--get-match-from-current-line roslaunch-jump--re-py)))
     (if (and pkg-name py-file-name)
         (find-file (roslaunch-jump-get-pkg-file-path pkg-name py-file-name)))))
 
 (defun roslaunch-jump-to-path ()
   (let* ((current-line (thing-at-point 'line t))
-         (found-match (string-match re-ros-path current-line)))
+         (found-match (string-match roslaunch-jump--re-ros-path current-line)))
     (when found-match
       (let* ((raw-ros-path (match-string 0 current-line))
              (ros-path (roslaunch-jump--replace-in-string "find" "rospack find" raw-ros-path))
@@ -45,7 +45,7 @@
 
 (defun roslaunch-jump-to-pkg (search)
   (let* (
-         (pkg-name (roslaunch-jump--get-match-from-current-line re-pkg))
+         (pkg-name (roslaunch-jump--get-match-from-current-line roslaunch--jump-re-pkg))
          (absolute-path
           (replace-regexp-in-string "\n$" "" (shell-command-to-string (format "rospack find %s" pkg-name)))))
     (if search
