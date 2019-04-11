@@ -2,7 +2,7 @@
 
 (require 'helm)
 
-(setq re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\)")
+(setq re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|rviz\\|py\\)")
 (setq re-pkg "pkg=\"\\([^\"]*\\)\"")
 (setq re-py "type=\"\\([^\"]*\\.py\\)\"")
 
