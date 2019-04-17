@@ -4,6 +4,10 @@
 
 (require 'helm)
 
+(defvar roslaunch-jump--re-ros-path)
+(defvar roslaunch-jump--re-pkg)
+(defvar roslaunch-jump--re-py)
+
 (setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|rviz\\|py\\)")
 (setq roslaunch-jump--re-pkg "pkg=\"\\([^\"]*\\)\"")
 (setq roslaunch-jump--re-py "type=\"\\([^\"]*\\.py\\)\"")
