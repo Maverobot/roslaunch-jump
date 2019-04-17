@@ -115,3 +115,13 @@
       (roslaunch-jump--get-candidates arg)))))
 
 (add-to-list 'company-backends 'roslaunch-jump-company-rospack-find-backend)
+
+(defun roslaunch-jump--recursively-up-find-file (search-path target-file-name)
+  (let ((parent-dir (expand-file-name (directory-file-name (file-name-directory search-path)))))
+    (if (file-exists-p (expand-file-name target-file-name parent-dir)) parent-dir
+      (if (string= parent-dir "/") nil
+        (recursively-up-find-ws parent-dir target-file-name)))))
+
+(defun roslaunch-jump-find_current_catkin_workspace ()
+  (interactive)
+  (recursively-up-find-ws (spacemacs--file-path)))
