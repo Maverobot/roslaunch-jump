@@ -112,6 +112,7 @@
   (interactive (list 'interactive))
   (case command
     (interactive (company-begin-backend 'roslaunch-jump-company-rospack-find-backend))
+    ; TODO: replace looking-back with more efficient methods
     (prefix (and (eq major-mode 'nxml-mode)
                  (when (looking-back "\\$(find [^\"\/ )]+)/[^\" ]*")
                    (match-string 0))))
