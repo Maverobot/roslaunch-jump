@@ -1,4 +1,6 @@
-;; Open launch/yaml file in new buffer
+;;; package --- Summary
+;;; Commentary:
+;;; Code:
 
 (require 'helm)
 
