@@ -127,8 +127,8 @@
   (let ((parent-dir (expand-file-name (directory-file-name (file-name-directory search-path)))))
     (if (file-exists-p (expand-file-name target-file-name parent-dir)) parent-dir
       (if (string= parent-dir "/") nil
-        (roslaunch-jump--recursively-up-find-ws parent-dir target-file-name)))))
+        (roslaunch-jump--recursively-up-find-file parent-dir target-file-name)))))
 
-(defun roslaunch-jump-find_current_catkin_workspace ()
+(defun roslaunch-jump-find-current-catkin-workspace ()
   (interactive)
-  (roslaunch-jump--recursively-up-find-ws (spacemacs--file-path)))
+  (message (roslaunch-jump--recursively-up-find-file (spacemacs--file-path) ".catkin_workspace")))
