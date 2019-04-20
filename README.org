@@ -1,6 +1,13 @@
 #+TITLE: roslaunch-jump
 An emacs package for making jumping around in ROS launch files easy peasy.
 [[file:gifs/demo.gif]]
+* Prerequisite
+  In order to be able to call ~rospack~ and find your packages, the ROS workspaces has to be sourced by added the following lines into your =~/.profile=:
+  #+BEGIN_SRC bash
+    source /opt/ros/version/setup.bash
+    source path/to/your/workspace/devel/setup.bash
+  #+END_SRC
+
 * Installation
   Use ~load-file~ function to load it in your config file. For example,
   #+BEGIN_SRC emacs-lisp
