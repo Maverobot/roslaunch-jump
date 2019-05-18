@@ -121,7 +121,10 @@
       (lambda (c) (string-prefix-p arg c))
       (roslaunch-jump--get-candidates arg)))))
 
-(add-to-list 'company-backends 'roslaunch-jump-company-rospack-find-backend)
+(add-hook 'nxml-mode-hook
+          (lambda ()
+            (set (make-local-variable 'company-backends) '(company-nxml roslaunch-jump-company-rospack-find-backend))
+            (company-mode)))
 
 (defun roslaunch-jump--recursively-up-find-file (search-path target-file-name)
   (let ((parent-dir (expand-file-name (directory-file-name (file-name-directory search-path)))))
