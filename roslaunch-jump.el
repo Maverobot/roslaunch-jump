@@ -84,3 +84,5 @@
   (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'company-mode)
   (add-hook 'nxml-mode-hook 'my-launch-file-config))
+
+(provide 'roslaunch-jump)
