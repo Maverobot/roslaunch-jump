@@ -9,14 +9,17 @@
 (defvar roslaunch-jump--re-py)
 
 (setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|urdf\\|rviz\\|py\\)")
-(setq roslaunch-jump--re-pkg "pkg=\"\\([^\"]*\\)\"")
+(setq roslaunch-jump--re-pkg "\\(pkg=\"\\([^\"]*\\)\"\\)\\|\\(find \\([-_A-Za-z0-9]+\\)\\)")
 (setq roslaunch-jump--re-py "type=\"\\([^\"]*\\.py\\)\"")
 
 (defun roslaunch-jump--get-match-from-current-line (re)
   (let* ((current-line (thing-at-point 'line t))
          (found-match (string-match re current-line)))
-    (if found-match
-        (match-string 1 current-line))))
+    (when found-match
+      (if (match-string 2 current-line)
+          (match-string 2 current-line)
+        (if (match-string 4 current-line)
+            (match-string 4 current-line))))))
 
 (defun roslaunch-jump--remove-new-line (str)
   (roslaunch-jump--replace-in-string "\n" "" str))
