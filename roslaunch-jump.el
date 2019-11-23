@@ -43,11 +43,10 @@
     (when found-match
       (let* ((raw-ros-path (match-string 0 current-line))
              (ros-path (roslaunch-jump--replace-in-string "find" "rospack find" raw-ros-path))
-             (absolute-path (shell-command-to-string (concat "/bin/echo -n " ros-path)))
-             (no-package (string-match "\\[rospack\\] Error: package .* not found" absolute-path)))
-        (if no-package
-            (message (match-string 0 absolute-path))
-          (find-file absolute-path))))))
+             (absolute-path (shell-command-to-string (concat "/bin/echo -n " ros-path))))
+        (if (file-exists-p absolute-path)
+            (find-file absolute-path)
+          (message absolute-path))))))
 
 (defun roslaunch-jump-to-pkg (search)
   (let* (
