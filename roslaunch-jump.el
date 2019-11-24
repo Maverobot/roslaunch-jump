@@ -65,7 +65,8 @@
              (absolute-path (shell-command-to-string (concat "/bin/echo -n " ros-path))))
         (if (file-exists-p absolute-path)
             (find-file absolute-path)
-          (message absolute-path))))))
+          (message (concat "roslaunch-jump: " absolute-path))
+          (message "roslaunch-jump: file does not exist."))))))
 
 (defun roslaunch-jump-to-pkg (search)
   (let* (
