@@ -3,6 +3,7 @@
 ;;; Code:
 
 (require 'helm)
+(require 'thingatpt)
 
 (defvar roslaunch-jump--re-ros-path)
 (defvar roslaunch-jump--re-pkg)
@@ -11,6 +12,21 @@
 (setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|urdf\\|rviz\\|py\\)")
 (setq roslaunch-jump--re-pkg "\\(pkg=\"\\([^\"]*\\)\"\\)\\|\\(find \\([-_A-Za-z0-9]+\\)\\)")
 (setq roslaunch-jump--re-py "type=\"\\([^\"]*\\.py\\)\"")
+
+(defun roslaunch-jump--get-match-by-index (idx)
+  (let ((start (match-beginning idx))
+        (end (match-end idx)))
+    (when (and start end)
+      (buffer-substring start end))))
+
+(defun roslaunch-jump--get-pkg-at-point()
+  (when-let* ((_ (thing-at-point-looking-at roslaunch-jump--re-pkg))
+              (start (match-beginning 0))
+              (end (match-end 0)))
+    (let ((pkg-name1 (roslaunch-jump--get-match-by-index 2))
+          (pkg-name2 (roslaunch-jump--get-match-by-index 4)))
+      (if pkg-name1 pkg-name1
+        (if pkg-name2 pkg-name2)))))
 
 (defun roslaunch-jump--get-match-from-current-line (re)
   (let* ((current-line (thing-at-point 'line t))
@@ -53,12 +69,13 @@
 
 (defun roslaunch-jump-to-pkg (search)
   (let* (
-         (pkg-name (roslaunch-jump--get-match-from-current-line roslaunch-jump--re-pkg))
+         (pkg-name (roslaunch-jump--get-pkg-at-point))
          (absolute-path
-          (replace-regexp-in-string "\n$" "" (shell-command-to-string (format "rospack find %s" pkg-name)))))
-    (if search
-        (helm-browse-project-find-files (concat absolute-path "/"))
-      (helm-find-files-1 (concat absolute-path "/")))))
+          (when pkg-name (replace-regexp-in-string "\n$" "" (shell-command-to-string (format "rospack find %s" pkg-name))))))
+    (when absolute-path
+      (if search
+          (helm-browse-project-find-files (concat absolute-path "/"))
+        (helm-find-files-1 (concat absolute-path "/"))))))
 
 (defun roslaunch-jump-jump-to-file ()
   (interactive)
