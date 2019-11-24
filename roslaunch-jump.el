@@ -9,7 +9,7 @@
 (defvar roslaunch-jump--re-pkg)
 (defvar roslaunch-jump--re-py)
 
-(setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch\\|yaml\\|srdf\\|xacro\\|urdf\\|rviz\\|py\\)")
+(setq roslaunch-jump--re-ros-path "\\$(find [^ ]*)[^ ]*\\.\\(launch[\\.xml]*\\|yaml\\|srdf\\|xacro\\|urdf\\|rviz\\|py\\)")
 (setq roslaunch-jump--re-pkg "\\(pkg=\"\\([^\"]*\\)\"\\)\\|\\(find \\([-_A-Za-z0-9]+\\)\\)")
 (setq roslaunch-jump--re-py "type=\"\\([^\"]*\\.py\\)\"")
 
@@ -102,6 +102,7 @@
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "d" 'roslaunch-jump-to-pkg-browse-dir)
     (spacemacs/set-leader-keys-for-major-mode 'nxml-mode "f" 'roslaunch-jump-to-pkg-find-files))
   (add-to-list 'auto-mode-alist '("\\.launch\\'" . nxml-mode))
+  (add-to-list 'auto-mode-alist '("\\.launch\\.xml\\'" . nxml-mode))
   (add-hook 'nxml-mode-hook 'company-mode)
   (add-hook 'nxml-mode-hook 'my-launch-file-config))
 
