@@ -1,3 +1,5 @@
+;;; roslaunch-jump.el --- helps to jump around in roslaunch files  -*- lexical-binding: t; -*-
+
 ;;; package --- Summary
 ;;; Commentary:
 ;;; Code:
